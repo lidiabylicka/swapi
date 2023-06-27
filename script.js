@@ -8,6 +8,7 @@ let startingID = 1;
 let tableData = "";
 let category = "";
 let url = "";
+
 // let indexID = "";
 // let numberIndex = Number(indexID + 1);
 
@@ -24,13 +25,41 @@ const getCategory = async (category, page) => {
   const results = data.results;
   return results;
 };
+//get count of all objects in the category and pagination of the table
+// const categoryPagination = async () => {
+//   const response = await fetch(`${BASE_URL}/${category}`);
+//   const data = await response.json();
+//   let allItemsInCategory = data.count;
+//   console.log(allItemsInCategory);
+//   console.log(typeof allItemsInCategory);
+
+//   const fetchCategory = await getCategory(category, page); // ??
+//   let itemsPerPage = Math.floor(fetchCategory.length);
+//   console.log("items per Page", itemsPerPage);
+
+//   let pagesTotal = parseInt(Math.ceil(allItemsInCategory / itemsPerPage), 10);
+//   console.log(typeof pagesTotal); //number
+//   console.log("pages total", pagesTotal);
+//   //next
+//   const next = document.querySelector(".nextButton");
+//   next.addEventListener("click", function () {
+//     console.log("works?");
+//     if (page < pagesTotal) {
+//       page++;
+//       createTable();
+//     } else {
+//       next.disabled = true;
+//     }
+//   });
+// };
 
 // deklaracja podstawowych obiektow
 const buttons = document.getElementById("buttons"); //container na buttony
 const titleButton = document.getElementsByClassName("titleButton");
 const table = document.getElementById("chart");
+const prev = document.querySelector(".prevButton");
 
-//stworzenie przyciskow:
+//stworzenie przyciskow z tytulami kategorii:
 const fetchButtons = async () => {
   const data = await getData();
   const titles = Object.keys(data); //nazwy kategorii
@@ -39,114 +68,154 @@ const fetchButtons = async () => {
     const $btn = document.createElement("button");
     $btn.innerHTML = title;
     buttons.appendChild($btn);
+
     //reakcja na klikniecie each $btn - stworzenie tabelki:
-    $btn.addEventListener("click", async () => {
-      tableData = "";
-      const fetchCategory = await getCategory(title, page);
-      console.log(fetchCategory);
-      // wstrzykniecie naglowkow za pomoca html-a
-      if (title == "people") {
-        tableData = `<tr>
+    const createTable = async () => {
+      $btn.addEventListener("click", async () => {
+        tableData = "";
+        //tutaj?
+        //get count of all objects in the category and pagination of the table
+        const categoryPagination = async () => {
+          const response = await fetch(`${BASE_URL}/${category}`);
+          const data = await response.json();
+          let allItemsInCategory = data.count;
+          console.log(allItemsInCategory);
+          //console.log(typeof allItemsInCategory);
+
+          const fetchCategory = await getCategory(category, page); // ??
+          let itemsPerPage = Math.floor(fetchCategory.length);
+          //console.log("items per Page", itemsPerPage);
+
+          let pagesTotal = parseInt(
+            Math.ceil(allItemsInCategory / itemsPerPage),
+            10
+          );
+          //console.log(typeof pagesTotal); //number
+          console.log("pages total", pagesTotal);
+          //next
+          const next = document.querySelector(".nextButton");
+          next.addEventListener("click", function () {
+            console.log("works?");
+            if (page < pagesTotal) {
+              page = page + 1;
+              createTable(category, page);
+            } else {
+              next.disabled = true;
+            }
+          });
+        };
+
+        const fetchCategory = await getCategory(title, page);
+        console.log(fetchCategory);
+
+        // wstrzykniecie naglowkow za pomoca html-a
+        if (title == "people") {
+          tableData = `<tr>
         <th>ID</th>
         <th>Name</th>
         <th>Skin color</th>
         <th>Birth year</th>
         <th>Created:</th>
       </tr>`;
-      } else if (title == "planets") {
-        tableData = `<tr>
+        } else if (title == "planets") {
+          tableData = `<tr>
         <th>ID</th>
         <th>Name</th>
         <th>Climate</th>
         <th>Gravity</th>
         <th>Created:</th>
       </tr>`;
-      } else if (title == "films") {
-        tableData = `<tr>
+        } else if (title == "films") {
+          tableData = `<tr>
         <th>ID</th>
         <th>Title</th>
         <th>Director</th>
         <th>Release date</th>
         <th>Created:</th>
       </tr>`;
-      } else if (title == "species") {
-        tableData = `<tr>
+        } else if (title == "species") {
+          tableData = `<tr>
         <th>ID</th>
         <th>Name</th>
         <th>Classification</th>
         <th>Language</th>
         <th>Created:</th>
       </tr>`;
-      } else {
-        tableData = `<tr>
+        } else {
+          tableData = `<tr>
         <th>ID</th>
         <th>Name</th>
         <th>Manufacturer</th>
         <th>Cost in credits</th>
         <th>Created:</th>
       </tr>`;
-      }
-      table.innerHTML = ""; //"hide"
-      table.innerHTML += tableData;
-
-      //wywolanie reszty tabelki:
-      fetchCategory.map((values, index) => {
-        if (title == "people") {
-          const person = new People(
-            index + 1,
-            values.name,
-            values.skin_color,
-            values.birth_year,
-            values.created
-          );
-
-          person.addToState();
-          tableData = person.addToTable();
-        } else if (title == "planets") {
-          const planet = new Planets(
-            index + 1,
-            values.name,
-            values.climate,
-            values.gravity,
-            values.created
-          );
-          planet.addToState();
-
-          tableData = planet.addToTable();
-        } else if (title == "films") {
-          const film = new Films(
-            index + 1,
-            values.title,
-            values.director,
-            values.release_date,
-            values.created
-          );
-          film.addToState();
-          tableData = film.addToTable();
-        } else if (title == "species") {
-          const species = new Species(
-            index + 1,
-            values.name,
-            values.classification,
-            values.language,
-            values.created
-          );
-          species.addToState();
-          tableData = species.addToTable();
-        } else {
-          const vehicle = new Vroom(
-            index + 1,
-            values.name,
-            values.manufacturer,
-            values.cost_in_credits,
-            values.created
-          );
-          vehicle.addToState();
-          tableData = vehicle.addToTable();
         }
+        table.innerHTML = ""; //"hide"
         table.innerHTML += tableData;
+
+        //wywolanie reszty tabelki:
+        fetchCategory.map((values, index) => {
+          if (title == "people") {
+            const person = new People(
+              index + 1,
+              values.name,
+              values.skin_color,
+              values.birth_year,
+              values.created
+            );
+
+            person.addToState();
+            tableData = person.addToTable();
+          } else if (title == "planets") {
+            const planet = new Planets(
+              index + 1,
+              values.name,
+              values.climate,
+              values.gravity,
+              values.created
+            );
+            planet.addToState();
+
+            tableData = planet.addToTable();
+          } else if (title == "films") {
+            const film = new Films(
+              index + 1,
+              values.title,
+              values.director,
+              values.release_date,
+              values.created
+            );
+            film.addToState();
+            tableData = film.addToTable();
+          } else if (title == "species") {
+            const species = new Species(
+              index + 1,
+              values.name,
+              values.classification,
+              values.language,
+              values.created
+            );
+            species.addToState();
+            tableData = species.addToTable();
+          } else {
+            const vehicle = new Vroom(
+              index + 1,
+              values.name,
+              values.manufacturer,
+              values.cost_in_credits,
+              values.created
+            );
+            vehicle.addToState();
+            tableData = vehicle.addToTable();
+          }
+          table.innerHTML += tableData;
+        });
+        //paginacja funkcja?
+        categoryPagination();
       });
-    });
+    };
+
+    createTable();
   });
 };
 fetchButtons();
@@ -215,7 +284,8 @@ function showDetails(data) {
   const formattedJson = JSON.stringify(data, null, 2)
     .replace(/",/g, '",\n')
     .replace(/{/g, "{\n")
-    .replace(/}/g, "\n}");
+    .replace(/}/g, "\n}")
+    .replace(/,/g, ",<br>");
   detailsContent.innerHTML = formattedJson;
 
   const closeButton = document.createElement("button");
@@ -269,9 +339,11 @@ const chartPagination = document.getElementById("chartPagination");
 let prevButton = document.createElement("button");
 let prevText = document.createTextNode("< previous");
 prevButton.appendChild(prevText);
+prevButton.classList.add("prevButton");
 let nextButton = document.createElement("button");
 let nextText = document.createTextNode("next >");
 nextButton.appendChild(nextText);
+nextButton.classList.add("nextButton");
 let clearButton = document.createElement("button");
 let clearTable = document.createTextNode("^ HIDE ^");
 clearButton.appendChild(clearTable);
@@ -283,12 +355,16 @@ clearButton.addEventListener("click", function clearTable() {
   table.innerHTML = "";
 });
 
+//paginacja
 nextButton.addEventListener("click", async () => {
   page++;
   //dopisac reszte kodu jak uporam sie z details
 });
 
-// classes
+// // classes
+
+// let allItems = "";
+// const pagesTotal = Math.ceil(totalItems / pageSize);
 
 class People {
   constructor(index, name, skin_color, birth_year, created) {
@@ -445,6 +521,7 @@ class Vroom {
     category = "vehicles";
   }
 }
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("TEST");
 }); //test
