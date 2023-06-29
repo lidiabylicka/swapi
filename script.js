@@ -70,153 +70,256 @@ const fetchButtons = async () => {
     buttons.appendChild($btn);
 
     //reakcja na klikniecie each $btn - stworzenie tabelki:
-    const createTable = async () => {
-      $btn.addEventListener("click", async () => {
-        tableData = "";
-        //tutaj?
-        //get count of all objects in the category and pagination of the table
-        const categoryPagination = async () => {
-          const response = await fetch(`${BASE_URL}/${category}`);
-          const data = await response.json();
-          let allItemsInCategory = data.count;
-          console.log(allItemsInCategory);
-          //console.log(typeof allItemsInCategory);
+    // const createTable = async () => { //zamkniecie od 74 w kolejnej funkcji sprawilo ze inne titles nie dzialaly (tylko 'people')
+    $btn.addEventListener("click", async () => {
+      page = 1;
 
-          const fetchCategory = await getCategory(category, page); // ??
-          let itemsPerPage = Math.floor(fetchCategory.length);
-          //console.log("items per Page", itemsPerPage);
+      tableData = "";
 
-          let pagesTotal = parseInt(
-            Math.ceil(allItemsInCategory / itemsPerPage),
-            10
-          );
-          //console.log(typeof pagesTotal); //number
-          console.log("pages total", pagesTotal);
-          //next
-          const next = document.querySelector(".nextButton");
-          next.addEventListener("click", function () {
-            console.log("works?");
-            if (page < pagesTotal) {
-              page = page + 1;
-              createTable(category, page);
-            } else {
-              next.disabled = true;
-            }
-          });
-        };
+      const fetchCategory = await getCategory(title, page);
+      console.log(fetchCategory);
 
-        const fetchCategory = await getCategory(title, page);
-        console.log(fetchCategory);
-
-        // wstrzykniecie naglowkow za pomoca html-a
-        if (title == "people") {
-          tableData = `<tr>
+      // wstrzykniecie naglowkow za pomoca html-a
+      if (title == "people") {
+        tableData = `<tr>
         <th>ID</th>
         <th>Name</th>
         <th>Skin color</th>
         <th>Birth year</th>
         <th>Created:</th>
       </tr>`;
-        } else if (title == "planets") {
-          tableData = `<tr>
+      } else if (title == "planets") {
+        tableData = `<tr>
         <th>ID</th>
         <th>Name</th>
         <th>Climate</th>
         <th>Gravity</th>
         <th>Created:</th>
       </tr>`;
-        } else if (title == "films") {
-          tableData = `<tr>
+      } else if (title == "films") {
+        tableData = `<tr>
         <th>ID</th>
         <th>Title</th>
         <th>Director</th>
         <th>Release date</th>
         <th>Created:</th>
       </tr>`;
-        } else if (title == "species") {
-          tableData = `<tr>
+      } else if (title == "species") {
+        tableData = `<tr>
         <th>ID</th>
         <th>Name</th>
         <th>Classification</th>
         <th>Language</th>
         <th>Created:</th>
       </tr>`;
-        } else {
-          tableData = `<tr>
+      } else {
+        tableData = `<tr>
         <th>ID</th>
         <th>Name</th>
         <th>Manufacturer</th>
         <th>Cost in credits</th>
         <th>Created:</th>
       </tr>`;
+      }
+      table.innerHTML = ""; //"hide"
+      table.innerHTML += tableData;
+
+      //wywolanie reszty tabelki:
+      fetchCategory.map((values, index) => {
+        if (title == "people") {
+          const person = new People(
+            index + 1,
+            values.name,
+            values.skin_color,
+            values.birth_year,
+            values.created
+          );
+
+          person.addToState();
+          tableData = person.addToTable();
+        } else if (title == "planets") {
+          const planet = new Planets(
+            index + 1,
+            values.name,
+            values.climate,
+            values.gravity,
+            values.created
+          );
+          planet.addToState();
+
+          tableData = planet.addToTable();
+        } else if (title == "films") {
+          const film = new Films(
+            index + 1,
+            values.title,
+            values.director,
+            values.release_date,
+            values.created
+          );
+          film.addToState();
+          tableData = film.addToTable();
+        } else if (title == "species") {
+          const species = new Species(
+            index + 1,
+            values.name,
+            values.classification,
+            values.language,
+            values.created
+          );
+          species.addToState();
+          tableData = species.addToTable();
+        } else {
+          const vehicle = new Vroom(
+            index + 1,
+            values.name,
+            values.manufacturer,
+            values.cost_in_credits,
+            values.created
+          );
+          vehicle.addToState();
+          tableData = vehicle.addToTable();
         }
-        table.innerHTML = ""; //"hide"
         table.innerHTML += tableData;
-
-        //wywolanie reszty tabelki:
-        fetchCategory.map((values, index) => {
-          if (title == "people") {
-            const person = new People(
-              index + 1,
-              values.name,
-              values.skin_color,
-              values.birth_year,
-              values.created
-            );
-
-            person.addToState();
-            tableData = person.addToTable();
-          } else if (title == "planets") {
-            const planet = new Planets(
-              index + 1,
-              values.name,
-              values.climate,
-              values.gravity,
-              values.created
-            );
-            planet.addToState();
-
-            tableData = planet.addToTable();
-          } else if (title == "films") {
-            const film = new Films(
-              index + 1,
-              values.title,
-              values.director,
-              values.release_date,
-              values.created
-            );
-            film.addToState();
-            tableData = film.addToTable();
-          } else if (title == "species") {
-            const species = new Species(
-              index + 1,
-              values.name,
-              values.classification,
-              values.language,
-              values.created
-            );
-            species.addToState();
-            tableData = species.addToTable();
-          } else {
-            const vehicle = new Vroom(
-              index + 1,
-              values.name,
-              values.manufacturer,
-              values.cost_in_credits,
-              values.created
-            );
-            vehicle.addToState();
-            tableData = vehicle.addToTable();
-          }
-          table.innerHTML += tableData;
-        });
-        //paginacja funkcja?
-        categoryPagination();
       });
-    };
 
-    createTable();
+      //get count of all objects in the category and pagination of the table
+      const categoryPagination = async (title) => {
+        const response = await fetch(`${BASE_URL}/${category}/?page=${page}`); //!!!added a line of code HERE IN CASE STOPPED WORKING!!!
+        const data = await response.json();
+        let allItemsInCategory = Math.floor(data.count);
+
+        const fetchCategory = await getCategory(category, page); // ??
+        let itemsPerPage = Math.floor(fetchCategory.length);
+
+        let pagesTotal = parseInt(
+          Math.ceil(allItemsInCategory / itemsPerPage),
+          10
+        );
+        //console.log("pages total", pagesTotal);
+
+        const next = document.querySelector(".nextButton");
+        next.addEventListener("click", async function () {
+          page = Math.ceil(page + 1);
+          tableData = "";
+          const fetchCategory = await getCategory(title, page);
+          console.log(fetchCategory);
+
+          // wstrzykniecie naglowkow za pomoca html-a
+          if (title == "people") {
+            tableData = `<tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Skin color</th>
+        <th>Birth year</th>
+        <th>Created:</th>
+      </tr>`;
+          } else if (title == "planets") {
+            tableData = `<tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Climate</th>
+        <th>Gravity</th>
+        <th>Created:</th>
+      </tr>`;
+          } else if (title == "films") {
+            tableData = `<tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Director</th>
+        <th>Release date</th>
+        <th>Created:</th>
+      </tr>`;
+          } else if (title == "species") {
+            tableData = `<tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Classification</th>
+        <th>Language</th>
+        <th>Created:</th>
+      </tr>`;
+          } else {
+            tableData = `<tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Manufacturer</th>
+        <th>Cost in credits</th>
+        <th>Created:</th>
+      </tr>`;
+          }
+          table.innerHTML = ""; //"hide"
+          table.innerHTML += tableData;
+          if (page == pagesTotal) {
+            next.disabled = true;
+          }
+
+          //wywolanie reszty tabelki:
+          fetchCategory.map((values, index) => {
+            if (title == "people" || page < pagesTotal) {
+              const person = new People(
+                index + 1,
+                values.name,
+                values.skin_color,
+                values.birth_year,
+                values.created
+              );
+              person.addToState();
+              const rowData = person.addToTable();
+              table.innerHTML += rowData;
+            } else if (title == "planets" || page < pagesTotal) {
+              const planet = new Planets(
+                index + 1,
+                values.name,
+                values.climate,
+                values.gravity,
+                values.created
+              );
+              planet.addToState();
+              const rowData = planet.addToTable();
+              table.innerHTML += planet.addToTable();
+            } else if (title == "films" || page < pagesTotal) {
+              const film = new Films(
+                index + 1,
+                values.title,
+                values.director,
+                values.release_date,
+                values.created
+              );
+              film.addToState();
+              const rowData = film.addToTable();
+              table.innerHTML += film.addToTable();
+            } else if (title == "species" || page < pagesTotal) {
+              const species = new Species(
+                index + 1,
+                values.name,
+                values.classification,
+                values.language,
+                values.created
+              );
+              species.addToState();
+              const rowData = species.addToTable();
+              table.innerHTML += species.addToTable();
+            } else if{
+              const vehicle = new Vroom(
+                index + 1,
+                values.name,
+                values.manufacturer,
+                values.cost_in_credits,
+                values.created
+              );
+              vehicle.addToState();
+              const rowData = vehicle.addToTable();
+              table.innerHTML += vehicle.addToTable();
+            }
+            table.innerHTML += tableData;
+          });
+        });
+      };
+      categoryPagination(title);
+    });
   });
+  // };
+
+  // createTable();
 };
 fetchButtons();
 
@@ -353,6 +456,15 @@ chartPagination.appendChild(nextButton);
 clearButton.addEventListener("click", function clearTable() {
   const table = document.getElementById("chart");
   table.innerHTML = "";
+  const imgDarth = document.getElementById("imgDarth");
+  imgDarth.classList.add("active");
+  const visibleDartVader = document.querySelector(".active");
+  setTimeout(function () {
+    imgDarth.classList.remove("active");
+  }, 6000);
+  // visibleDartVader.addEventListener("click", function burnAndRemove() {
+  //   console.log("WORKS");
+  // });
 });
 
 //paginacja
@@ -525,3 +637,9 @@ class Vroom {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("TEST");
 }); //test
+const elements = document.querySelectorAll(":contains('NaN-NaN-NaN')");
+
+// Loop through each element and replace the string with '?'
+elements.forEach((element) => {
+  element.innerHTML = element.innerHTML.replace(/NaN-NaN-NaN/g, "?");
+});
