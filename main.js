@@ -20,6 +20,7 @@ nextButton.classList.add("nextButton");
 let clearButton = document.createElement("button");
 let clearTable = document.createTextNode("^ HIDE ^");
 clearButton.appendChild(clearTable);
+clearButton.disabled = true; // why is this button active by default?
 chartPagination.appendChild(prevButton);
 chartPagination.appendChild(clearButton);
 chartPagination.appendChild(nextButton);
@@ -73,6 +74,7 @@ const fetchButtons = async () => {
       createTable(category, page, categoryData);
     }
   });
+  clearButton.disabled = false;
 };
 fetchButtons();
 
@@ -266,17 +268,22 @@ const createTable = async (category, page) => {
     option.value = i;
     option.textContent = i;
     selectPage.appendChild(option);
-    //option.classList.add("option");
   }
 
-  const currentPage = `<label for="page-select">You are currently on page</label>${selectPage.outerHTML} out of ${total_pages}`;
+  const currentPage = `You are currently on page ${page} out of ${total_pages} ${selectPage.outerHTML} <button id="goToPage">Go to page</button>`;
   pageInfo.innerHTML = currentPage;
 
-  selectByID.addEventListener("change", (event) => {
-    const selectedPage = parseInt(event.target.value);
-    console.log(selectedPage);
+  const goToPageButton = document.getElementById("goToPage");
+  goToPageButton.addEventListener("click", () => {
+    const selectPageElement = document.getElementById("select_page");
+    if (selectPageElement) {
+      const selectedPage = parseInt(selectPageElement.value);
+      console.log(selectedPage);
 
-    createTable(category, selectedPage);
+      createTable(category, selectedPage);
+    } else {
+      console.error("Select element not found.");
+    }
   });
 };
 
@@ -291,7 +298,10 @@ table.addEventListener("click", (event) => {
     const button = event.target;
     const row = event.target.closest("tr");
     const id = event.target.dataset.id;
-
+    const badFeelingSound = document.getElementById("bad-feeling");
+    badFeelingSound.play();
+    badFeelingSound.volume = 0.5;
+    badFeelingSound.speed = 1.2;
     function showModal(id, row) {
       const modal = document.createElement("div"); //stworzenie modala
       modal.classList.add("modal");
@@ -306,6 +316,15 @@ table.addEventListener("click", (event) => {
       document.body.appendChild(modal);
       const yesButton = modal.querySelector(".yes");
       const noButton = modal.querySelector(".no");
+      const doItSound = document.getElementById("do-it");
+      yesButton.addEventListener(
+        "mouseover",
+        function () {
+          doItSound.play();
+          doItSound.volume = 0.5;
+        },
+        false
+      );
 
       if (yesButton) {
         yesButton.addEventListener("click", () => {
@@ -589,13 +608,41 @@ document.addEventListener("DOMContentLoaded", () => {
 clearButton.addEventListener("click", function clearTable() {
   const table = document.getElementById("chart");
   table.innerHTML = "";
-  const imgDarth = document.getElementById("imgDarth");
-  imgDarth.classList.add("active");
-  const visibleDartVader = document.querySelector(".active");
-  setTimeout(function () {
-    imgDarth.classList.remove("active");
-  }, 6000);
-  // visibleDartVader.addEventListener("click", function burnAndRemove() {
-  //   console.log("WORKS");
-  // });
+  const validation = document.querySelector(".validation");
+  //validation.remove();
+  const funBeginsSound = document.getElementById("fun-begins");
+  funBeginsSound.play();
+
+  clearButton.innerHTML = "PRESS TO PLAY DARTH VADER HUNT";
+  clearButton.classList.toggle("play");
+
+  const playButton = document.querySelector(".play");
+  playButton.addEventListener("click", function playGame() {
+    const playPitch = document.createElement("div");
+    playPitch.classList.add("playPitch");
+    document.body.appendChild(playPitch);
+    const startGameBtn = document.createElement("button");
+    startGameBtn.innerText = `GO!`;
+    playPitch.appendChild(startGameBtn);
+    startGameBtn.addEventListener("click", function playNow() {
+      startGameBtn.remove();
+      const imgDarth = document.getElementById("imgDarth");
+      imgDarth.classList.add("active");
+      const visibleDartVader = document.querySelector(".active");
+      playPitch.appendChild(imgDarth);
+      imgDarth.addEventListener("click", () => {
+        console.log("Clicked!");
+        playPitch.textContent = "LUKE.. I'M YOUR FATHER";
+        imgDarth.classList.remove("active");
+
+        setTimeout(function () {
+          playPitch.style.display = "none";
+        }, 6000);
+      });
+    });
+  });
+
+  // setTimeout(function () {
+  //   imgDarth.classList.remove("active");
+  // }, 6000);
 });
