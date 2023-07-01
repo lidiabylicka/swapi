@@ -311,35 +311,50 @@ tbody:nth-child(even) {
   align-items: center;
   justify-content: center;
   border: 10px solid #7f6a91;
+  display: flex;
+  color: red;
+  font-size: large;
+}
+#closeGame {
+  position: relative;
+  top: -43%;
+  left: 50%;
+  width: min-content;
+  height: min-content;
+  background: linear-gradient(
+    326deg,
+    rgba(2, 0, 36, 0.434) 0%,
+    rgba(190, 63, 28, 0.231) 47%,
+    rgba(11, 1, 30, 0.493) 100%
+  );
 }
 
 @keyframes fly {
   0% {
-    transform: translate(15vw, -20vw);
+    transform: translate(15vw, -20vw) rotateY(0);
     opacity: 0.7;
   }
   20% {
-    transform: translate(0, 70vh);
-    rotate: (0.8deg);
+    transform: translate(-9%, 70vh) rotateY(-3.858rad);
     opacity: 1;
   }
-  50% {
-    transform: translate(90vw, 0) perspective(23rem);
-    rotate: (0.5turn);
+  40% {
+    transform: translate(calc(90vw - 100px), calc(70vh - 100px))
+      perspective(23rem) rotate(calc(0.5turn + 0.5turn * var(--rotate-dir)));
     opacity: 1;
   }
   60% {
-    transform: translate(-30vw, 0) scale(2);
+    transform: translate(calc(30vw - 100px), calc(40vh - 100px)) scale(2)
+      rotate(calc(0.5turn + 0.5turn * var(--rotate-dir)));
     opacity: 1;
   }
   80% {
-    transform: translate(20vw, 20vh) rotateY(3.142rad);
-
+    transform: translate(calc(58vw - 100px), calc(290px - 100px))
+      rotateY(calc(2.142rad + 0.5turn * var(--rotate-dir)));
     opacity: 1;
   }
   100% {
-    transform: translate(-30vw, 0) perspective(23rem);
-    rotate: (0.8turn);
+    transform: translate(-11vw, 0) perspective(23rem);
     opacity: 0.06;
   }
 }

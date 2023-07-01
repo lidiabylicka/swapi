@@ -32,6 +32,11 @@ const buttons = document.getElementById("buttons"); //container na buttony
 const titleButton = document.getElementsByClassName("titleButton");
 const table = document.getElementById("chart");
 
+const lightsaberSound = document.getElementById("lightsaber");
+document.body.addEventListener("click", function () {
+  lightsaberSound.play();
+  lightsaberSound.volume(0.2);
+});
 //fetch ogolnego linku z API:
 const fetchData = async (url) => {
   const response = await fetch(url);
@@ -605,44 +610,52 @@ document.addEventListener("DOMContentLoaded", () => {
 }); //test
 
 //clearButton fun:
-clearButton.addEventListener("click", function clearTable() {
+clearButton.addEventListener("click", function () {
   const table = document.getElementById("chart");
   table.innerHTML = "";
   const validation = document.querySelector(".validation");
-  //validation.remove();
-  const funBeginsSound = document.getElementById("fun-begins");
-  funBeginsSound.play();
 
   clearButton.innerHTML = "PRESS TO PLAY DARTH VADER HUNT";
   clearButton.classList.toggle("play");
 
   const playButton = document.querySelector(".play");
-  playButton.addEventListener("click", function playGame() {
-    const playPitch = document.createElement("div");
-    playPitch.classList.add("playPitch");
-    document.body.appendChild(playPitch);
-    const startGameBtn = document.createElement("button");
-    startGameBtn.innerText = `GO!`;
-    playPitch.appendChild(startGameBtn);
-    startGameBtn.addEventListener("click", function playNow() {
-      startGameBtn.remove();
-      const imgDarth = document.getElementById("imgDarth");
-      imgDarth.classList.add("active");
-      const visibleDartVader = document.querySelector(".active");
-      playPitch.appendChild(imgDarth);
-      imgDarth.addEventListener("click", () => {
-        console.log("Clicked!");
-        playPitch.textContent = "LUKE.. I'M YOUR FATHER";
-        imgDarth.classList.remove("active");
 
-        setTimeout(function () {
-          playPitch.style.display = "none";
-        }, 6000);
+  if (clearButton.classList.contains("play")) {
+    playButton.addEventListener("click", () => {
+      const funBeginsSound = document.getElementById("fun-begins");
+      funBeginsSound.play();
+      const playPitch = document.createElement("div");
+      playPitch.classList.add("playPitch");
+      const closeGame = document.createElement("button");
+      closeGame.id = "closeGame";
+      closeGame.innerText = "X";
+      closeGame.addEventListener("click", function () {
+        playPitch.remove();
+      });
+      playPitch.appendChild(closeGame);
+      document.body.appendChild(playPitch);
+      const startGameBtn = document.createElement("button");
+      startGameBtn.innerText = `GO!`;
+      playPitch.appendChild(startGameBtn);
+      startGameBtn.addEventListener("click", function playNow() {
+        startGameBtn.remove();
+        const imgDarth = document.getElementById("imgDarth");
+        imgDarth.classList.add("active");
+        const visibleDartVader = document.querySelector(".active");
+        playPitch.appendChild(imgDarth);
+        visibleDartVader.addEventListener("click", () => {
+          console.log("Clicked!");
+
+          playPitch.textContent = "LUKE.. I'M YOUR FATHER";
+          imgDarth.classList.remove("active");
+          const fatherSound = document.getElementById("father");
+          fatherSound.play();
+          setTimeout(function () {
+            playPitch.style.display = "none";
+            window.location.reload();
+          }, 4000);
+        });
       });
     });
-  });
-
-  // setTimeout(function () {
-  //   imgDarth.classList.remove("active");
-  // }, 6000);
+  }
 });
