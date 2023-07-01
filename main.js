@@ -32,11 +32,6 @@ const buttons = document.getElementById("buttons"); //container na buttony
 const titleButton = document.getElementsByClassName("titleButton");
 const table = document.getElementById("chart");
 
-const lightsaberSound = document.getElementById("lightsaber");
-document.body.addEventListener("click", function () {
-  lightsaberSound.play();
-  lightsaberSound.volume(0.2);
-});
 //fetch ogolnego linku z API:
 const fetchData = async (url) => {
   const response = await fetch(url);
@@ -637,6 +632,11 @@ clearButton.addEventListener("click", function () {
       const startGameBtn = document.createElement("button");
       startGameBtn.innerText = `GO!`;
       playPitch.appendChild(startGameBtn);
+      const lightsaberSound = document.getElementById("lightsaber");
+      playPitch.addEventListener("click", function () {
+        lightsaberSound.play();
+        lightsaberSound.volume = 0.2;
+      });
       startGameBtn.addEventListener("click", function playNow() {
         startGameBtn.remove();
         const imgDarth = document.getElementById("imgDarth");

@@ -295,8 +295,9 @@ tbody:nth-child(even) {
   z-index: 9999;
   height: 80px;
   width: 80px;
-  animation: fly 5s linear infinite;
+  animation: fly 4s linear infinite;
   pointer-events: stroke;
+  position: relative;
 }
 
 .playPitch {
@@ -313,7 +314,7 @@ tbody:nth-child(even) {
   border: 10px solid #7f6a91;
   display: flex;
   color: red;
-  font-size: large;
+  font-size: 40px;
 }
 #closeGame {
   position: relative;
@@ -331,30 +332,23 @@ tbody:nth-child(even) {
 
 @keyframes fly {
   0% {
-    transform: translate(15vw, -20vw) rotateY(0);
+    transform: translate(200px, -20px);
     opacity: 0.7;
   }
-  20% {
-    transform: translate(-9%, 70vh) rotateY(-3.858rad);
+  25% {
+    transform: translate(0, 50vh) rotate(1turn);
     opacity: 1;
   }
-  40% {
-    transform: translate(calc(90vw - 100px), calc(70vh - 100px))
-      perspective(23rem) rotate(calc(0.5turn + 0.5turn * var(--rotate-dir)));
+  50% {
+    transform: translate(65px, 0) scale(-0.5, 1);
     opacity: 1;
   }
-  60% {
-    transform: translate(calc(30vw - 100px), calc(40vh - 100px)) scale(2)
-      rotate(calc(0.5turn + 0.5turn * var(--rotate-dir)));
-    opacity: 1;
-  }
-  80% {
-    transform: translate(calc(58vw - 100px), calc(290px - 100px))
-      rotateY(calc(2.142rad + 0.5turn * var(--rotate-dir)));
+  75% {
+    transform: translate(65px, 100vh) rotate(3turn);
     opacity: 1;
   }
   100% {
-    transform: translate(-11vw, 0) perspective(23rem);
-    opacity: 0.06;
+    transform: translate(-50px, -20) rotate(4turn);
+    opacity: 0.7;
   }
 }
