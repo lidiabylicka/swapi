@@ -604,7 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("TEST");
 }); //test
 
-//clearButton fun:
+//clearButton and GAME:
 clearButton.addEventListener("click", function () {
   const table = document.getElementById("chart");
   table.innerHTML = "";
@@ -647,6 +647,10 @@ clearButton.addEventListener("click", function () {
         imgGrogu.classList.add("activeG");
         const visibleGrogu = document.querySelector(".activeG");
         playPitch.appendChild(visibleGrogu);
+        const jabbaTheHut = document.getElementById("jabba");
+        jabbaTheHut.classList.add("activeJ");
+        const visibleJabba = document.querySelector(".activeJ");
+        playPitch.appendChild(visibleJabba);
         visibleDartVader.addEventListener("click", () => {
           console.log("Clicked!");
           playPitch.textContent =
@@ -671,7 +675,13 @@ clearButton.addEventListener("click", function () {
             playPitch.style.display = "none";
             window.location.reload();
           }, 4000);
-          //add JABBA THE HUT AND MAKE IT SO CLICKING AT HIM WILL MAKE BACKGROUND GREEN FOR A MOMENT//
+        });
+        visibleJabba.addEventListener("mousedown", () => {
+          jabbaTheHut.classList.remove("activeJ");
+          playPitch.classList.toggle("playPitchJabba");
+          setTimeout(function () {
+            playPitch.classList.remove("playPitchJabba");
+          }, 1500);
         });
       });
     });

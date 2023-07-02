@@ -309,6 +309,16 @@ tbody:nth-child(even) {
   position: relative;
 }
 
+.activeJ {
+  visibility: visible;
+  z-index: 9999;
+  height: 80px;
+  width: 80px;
+  animation: fly2 6s linear infinite;
+  pointer-events: all;
+  position: relative;
+}
+
 .playPitch {
   position: absolute;
   top: 0;
@@ -324,6 +334,27 @@ tbody:nth-child(even) {
   display: flex;
   color: red;
   font-size: 40px;
+  cursor: url("./img/lightsaberpng.png") 4 4, crosshair;
+}
+
+.playPitchJabba {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 98%;
+  height: 95%;
+  background-image: url("./img/jabba-background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 10px solid #7f6a91;
+  display: flex;
+  color: red;
+  font-size: 40px;
+  cursor: url("./img/lightsaberpng.png") 4 4, crosshair;
 }
 #closeGame {
   position: relative;
