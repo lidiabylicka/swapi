@@ -415,3 +415,26 @@ tbody:nth-child(even) {
     opacity: 1;
   }
 }
+
+@media (max-width: 480px) {
+  /* body {
+    display: flex;
+    flex-direction: row;
+  } */
+  #buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  #chartPagination {
+    display: flex;
+    flex-direction: column;
+  }
+  .validation {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .tableContainer {
+    width: 100vw;
+  }
+}
