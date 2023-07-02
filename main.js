@@ -18,7 +18,7 @@ let nextText = document.createTextNode("next >");
 nextButton.appendChild(nextText);
 nextButton.classList.add("nextButton");
 let clearButton = document.createElement("button");
-let clearTable = document.createTextNode("^ HIDE ^");
+let clearTable = document.createTextNode("HIDE DETAILS / UNCOVER THE TRUTH");
 clearButton.appendChild(clearTable);
 clearButton.disabled = true; // why is this button active by default?
 chartPagination.appendChild(prevButton);
@@ -642,18 +642,36 @@ clearButton.addEventListener("click", function () {
         const imgDarth = document.getElementById("imgDarth");
         imgDarth.classList.add("active");
         const visibleDartVader = document.querySelector(".active");
-        playPitch.appendChild(imgDarth);
+        playPitch.appendChild(visibleDartVader);
+        const imgGrogu = document.getElementById("grogu");
+        imgGrogu.classList.add("activeG");
+        const visibleGrogu = document.querySelector(".activeG");
+        playPitch.appendChild(visibleGrogu);
         visibleDartVader.addEventListener("click", () => {
           console.log("Clicked!");
-
-          playPitch.textContent = "LUKE.. I'M YOUR FATHER";
+          playPitch.textContent =
+            "LUKE.. I AM YOUR FATHER (and I'm disappointed, honestly)";
           imgDarth.classList.remove("active");
           const fatherSound = document.getElementById("father");
           fatherSound.play();
+          playPitch.style.color = "#ffffff";
           setTimeout(function () {
             playPitch.style.display = "none";
             window.location.reload();
           }, 4000);
+        });
+        visibleGrogu.addEventListener("click", () => {
+          console.log("Clicked!");
+          playPitch.textContent = "GAME OVER";
+          imgGrogu.classList.remove("active");
+          const gameOver = document.getElementById("game-over");
+          gameOver.play();
+          playPitch.style.background = "#000000";
+          setTimeout(function () {
+            playPitch.style.display = "none";
+            window.location.reload();
+          }, 4000);
+          //add JABBA THE HUT AND MAKE IT SO CLICKING AT HIM WILL MAKE BACKGROUND GREEN FOR A MOMENT//
         });
       });
     });

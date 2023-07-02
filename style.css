@@ -299,6 +299,15 @@ tbody:nth-child(even) {
   pointer-events: stroke;
   position: relative;
 }
+.activeG {
+  visibility: visible;
+  z-index: 9999;
+  height: 80px;
+  width: 80px;
+  animation: fly2 4s ease-in-out infinite;
+  pointer-events: stroke;
+  position: relative;
+}
 
 .playPitch {
   position: absolute;
@@ -332,23 +341,46 @@ tbody:nth-child(even) {
 
 @keyframes fly {
   0% {
-    transform: translate(200px, -20px);
-    opacity: 0.7;
-  }
-  25% {
-    transform: translate(0, 50vh) rotate(1turn);
+    transform: translate(275px, -20vw) rotate(3turn);
     opacity: 1;
   }
+  /* 25% {
+    transform: translate(50, 50vh) rotate(45deg);
+    opacity: 1;
+  } */
   50% {
-    transform: translate(65px, 0) scale(-0.5, 1);
+    transform: translate(-50vw, 0) scale(-0.5, 2);
     opacity: 1;
   }
   75% {
-    transform: translate(65px, 100vh) rotate(3turn);
+    transform: translate(20vh, 20vh);
     opacity: 1;
   }
   100% {
-    transform: translate(-50px, -20) rotate(4turn);
-    opacity: 0.7;
+    transform: translate(275px, -20vw) rotate(3turn);
+    opacity: 1;
+  }
+}
+
+@keyframes fly2 {
+  0% {
+    transform: translate(-50vw, 0) scale(1.5);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(25px, -20vw) rotate(3turn);
+    opacity: 1;
+  }
+  /* 50% {
+    transform: translate(275px, -20vw) rotate(3turn);
+    opacity: 1;
+  } */
+  75% {
+    transform: translate(20vh, 20vh);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50vw, 50vh) rotate(45deg);
+    opacity: 1;
   }
 }
